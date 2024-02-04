@@ -1,0 +1,137 @@
+---
+title: "One4All Package Tutorial"
+author: "Hannah Sherrod, Win Cowger"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{One4All Package Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE
+)
+```
+
+## Document Overview
+
+This document outlines the One4All package and highlights the main functions to validate data without using the validator app. It is the user's choice whether to work in the validator app or to use the One4All package. After reading this document, users will have a better understanding of the One4All package development and the main functions to validate and share data. To access the One4All package, go to our [GitHub](https://github.com/Moore-Institute-4-Plastic-Pollution-Res/One4All) and link it directly to your own device in R.
+
+The One4All package is the backbone of the validator app. If you are looking for a tutorial on how to use the app see the [Validator App Tutorial](app.html).
+
+## Installation
+
+After installing the R package, read in the following library:
+```{r setup}
+library(One4All)
+```
+
+To run the app, run the command `run_app()`.
+```{r, eval=FALSE}
+run_app()
+```
+
+## Validate Data: Reading and Formatting Data
+
+The function below validates data using the One4All package. Replace the four parameters defined below with your actual values or file paths. The `'data_names'` should be replaced with the tables from the rules sheet.
+
+**`'files_data'`**: A list of file paths for the datasets to be validated (either CSV or XLSX files).
+
+**`'data_names'`**: (Optional) A character vector of names for the datasets. If not provided, names will be extracted from the file paths. `'(ex. methodology, samples, particles)'`
+
+**`'file_rules'`**: A file path for the rules file, either in CSV or XLSX format.
+
+**`'zip_data'`**: A file path to a zip folder for validating unstructured data.
+
+```{r, eval=FALSE}
+validate_data(
+  files_data,
+  data_names = NULL,
+  file_rules = NULL,
+  zip_data = NULL
+)
+```
+
+#### Check for malicious files
+
+The function below checks for malicious files. If any of the provided files appear to have a malicious extension, the function will stop and raise an error. The argument, `'files'`, is a character vector of file paths, which can be paths to zip or individual files. If any malicious file is found, the code will return 'TRUE', otherwise it will say 'FALSE'.
+
+```{r, eval=FALSE}
+check_for_malicious_files(files)
+```
+
+#### Read rules
+
+The function below reads rules from a file or a data frame. Acceptable file formats are CSV or XLSX files.
+
+```{r, eval=FALSE}
+read_rules(file_rules)
+```
+
+#### Read data
+
+The function reads and formats data from CSV or XLSX files. The argument, `'files_data'`, is the list of files to be read, and `'data_names'`, is the optional vector of names for the data frames.
+
+```{r, eval=FALSE}
+read_data(files_data, data_names = NULL)
+```
+
+## Where is this data shared?
+
+One4All allows users to not only validate their data, but to share their data as well, promoting open-source resources. The purpose of this section is to provide background information on how and where the data is sent. 
+
+
+In the One4All package, the remote share function shares the validated data to three remote repositories, including MongoDB, CKAN, and/or AmazonS3. The purpose of having three options is for user preference on where to share their data: 
+
+
+**MongoDB** is a NoSQL database that stores data in BSON format, allowing for flexible data structures.
+
+**CKAN** is an open-source data portal platform, allowing for managing and sharing datasets.
+
+**Amazon S3** is a cloud-based object storage service, providing scalable and durable storage for a wide variety of data types.
+
+The `'remote_share'` function is shown below.
+```{r, eval=FALSE}
+shared_data <- remote_share(validation = result_valid,
+                            data_formatted = result_valid$data_formatted,
+                            files = test_file,
+                            verified = "your_verified_key",
+                            valid_key = "your_valid_key",
+                            valid_rules = digest::digest(test_rules),
+                            ckan_url = "https://example.com",
+                            ckan_key = "your_ckan_key",
+                            ckan_package = "your_ckan_package",
+                            url_to_send = "https://your-url-to-send.com",
+                            rules = test_rules,
+                            results = valid_example$results,
+                            s3_key_id = "your_s3_key_id",
+                            s3_secret_key = "your_s3_secret_key",
+                            s3_region = "your_s3_region",
+                            s3_bucket = "your_s3_bucket",
+                            mongo_key = "your_mongo_key",
+                            mongo_collection = "your_mongo_collection",
+                            old_cert = NULL
+)
+```
+
+## How is the data downloaded?
+
+The `'remote_download'` function from the One4All package allows users to download shared data from MongoDB, CKAN, and/or AmazonS3. The data is retrieved based on the `'hashed_data'` identifier and assumes the data is stored using the same naming conventions provided in the `'remote_share'` function.
+
+The `'remote_download'` function is shown below.
+```{r, eval=FALSE}
+ downloaded_data <- remote_download(hashed_data = "example_hash",
+                                     ckan_url = "https://example.com",
+                                     ckan_key = "your_ckan_key",
+                                     ckan_package = "your_ckan_package",
+                                     s3_key_id = "your_s3_key_id",
+                                     s3_secret_key = "your_s3_secret_key",
+                                     s3_region = "your_s3_region",
+                                     s3_bucket = "your_s3_bucket",
+                                     mongo_key = "mongo_key",
+                                     mongo_collection = "mongo_collection")
+```
