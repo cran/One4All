@@ -12,17 +12,20 @@ library(One4All)
 #  run_app()
 
 ## ----fig.align="center", echo=FALSE-------------------------------------------
-knitr::include_graphics("appimages/RulesExampleValidator.png")
+knitr::include_graphics("appimages/RulesExampleValidator.jpg")
 
 ## ----fig.align="center", echo=FALSE-------------------------------------------
-knitr::include_graphics("appimages/UploadDataValidator.png")
+knitr::include_graphics("appimages/TablesImageValidator.jpg")
 
 ## ----fig.align="center", echo=FALSE-------------------------------------------
-knitr::include_graphics("appimages/SuccessValidator.png")
+knitr::include_graphics("appimages/ErrorImageValidator.jpg")
 
 ## ----fig.align="center", echo=FALSE-------------------------------------------
-knitr::include_graphics("appimages/TablesImageValidator.png")
+knitr::include_graphics("appimages/UploadDataValidator.jpg")
 
 ## ----fig.align="center", echo=FALSE-------------------------------------------
-knitr::include_graphics("appimages/ErrorImageValidator.png")
+knitr::include_graphics("appimages/SuccessValidator.jpg")
+
+## ----fig.align="center", echo=FALSE-------------------------------------------
+knitr::include_graphics("appimages/DownloadDataValidator.jpg")
 

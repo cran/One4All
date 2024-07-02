@@ -256,7 +256,7 @@ test_that("validate_data returns a success for rules files that are valid for th
     expect_false(unique(result$issues))
 })
 
-test_that("validate_data returns an correct values with invalid example", {
+test_that("validate_data returns a correct values with invalid example", {
     data("invalid_example")
     data("test_rules")
     result <- validate_data(files_data = invalid_example, data_names = names(invalid_example), file_rules = test_rules) |>
@@ -479,6 +479,15 @@ test_that("create_valid_excel creates a valid Excel file", {
     
     # Perform additional checks on the worksheets as needed
     
+    suppressWarnings({
+        create_valid_excel(
+            file_rules = test_rules,
+            negStyle = createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE"),
+            posStyle = createStyle(fontColour = "#006100", bgFill = "#C6EFCE"),
+            row_num = 1000
+        )
+    })
+    
     # Clean up: delete the output file
     file.remove(output_file)
     
@@ -566,8 +575,8 @@ test_that("remote_download retrieves identical data from all sources", {
     test_remote <- remote_share(validation = result_valid, 
                                 data_formatted = result_valid$data_formatted, 
                                 files = test_file,
-                                verified = config$valid_key, 
-                                valid_key = config$valid_key, 
+                                verified = config$valid_key_share, 
+                                valid_key_share = config$valid_key_share, 
                                 valid_rules = digest::digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 
@@ -628,8 +637,8 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     test_remote <- remote_share(validation = result_valid, 
                                 data_formatted = result_valid$data_formatted, 
                                 files = test_file,
-                                verified = config$valid_key, 
-                                valid_key = config$valid_key, 
+                                verified = config$valid_key_share, 
+                                valid_key_share = config$valid_key_share, 
                                 valid_rules = digest::digest(test_rules), 
                                 ckan_url = config$ckan_url, 
                                 ckan_key = config$ckan_key, 
@@ -649,14 +658,14 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
     
     # Download the data using remote_download
     expect_error(remote_raw_download(hashed_data = test_remote$hashed_data, 
-                        file_path = test_file_zip,
-                        ckan_url = config$ckan_url, 
-                        ckan_key = config$ckan_key, 
-                        ckan_package = config$ckan_package,
-                        s3_key_id = config$s3_key_id,
-                        s3_secret_key = config$s3_secret_key,
-                        s3_region = config$s3_region,
-                        s3_bucket = config$s3_bucket))
+                                     file_path = test_file_zip,
+                                     ckan_url = config$ckan_url, 
+                                     ckan_key = config$ckan_key, 
+                                     ckan_package = config$ckan_package,
+                                     s3_key_id = config$s3_key_id,
+                                     s3_secret_key = config$s3_secret_key,
+                                     s3_region = config$s3_region,
+                                     s3_bucket = config$s3_bucket))
     
     remote_raw_download(hashed_data = test_remote$hashed_data, 
                         file_path = test_file_zip,
@@ -676,6 +685,23 @@ test_that("remote_download retrieves zip data from all ckan and s3", {
                         s3_bucket = config$s3_bucket)
     
     expect_true(file.exists(test_file_zip2))
+    
+    # Test download_all
+    test_that("download_all downloads files from S3 bucket", {
+        # Create temporary directory to store downloaded files
+        temp_dir <- tempdir()
+        
+        # Download files using download_all
+        download_all_result <- download_all(file_path = temp_dir,
+                                            s3_key_id = config$s3_key_id,
+                                            s3_secret_key = config$s3_secret_key,
+                                            s3_region = config$s3_region,
+                                            s3_bucket = config$s3_bucket,
+                                            callback = NULL)
+        
+        # Check if files are downloaded to the specified directory
+        expect_true(length(list.files(temp_dir)) > 0, "Files should be downloaded to the specified directory")
+    })
 })
 
 test_that("check_for_malicious_files works correctly", {

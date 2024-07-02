@@ -16,7 +16,7 @@ library(One4All)
 #    files_data,
 #    data_names = NULL,
 #    file_rules = NULL,
-#    zip_data = NULL
+#    zip_data
 #  )
 
 ## ----eval=FALSE---------------------------------------------------------------
@@ -27,6 +27,9 @@ library(One4All)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  read_data(files_data, data_names = NULL)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  broken_rules <- rules_broken(results = result_valid$results[[1]], show_decision = TRUE)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  shared_data <- remote_share(validation = result_valid,

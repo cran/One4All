@@ -2,7 +2,7 @@
 % Please edit documentation in R/global.R
 \name{check_for_malicious_files}
 \alias{check_for_malicious_files}
-\title{Check for Malicious Files}
+\title{Check for malicious files}
 \usage{
 check_for_malicious_files(files)
 }
@@ -13,7 +13,7 @@ check_for_malicious_files(files)
 A logical value indicating if any of the files in the input have a malicious file extension. Returns `TRUE` if any malicious file is found, otherwise `FALSE`.
 }
 \description{
-This function checks for the presence of files with extensions known to be associated with malicious activities. 
+This function checks for the presence of files with extensions known to be associated with malicious activities.
 The function can be used to screen zip files or individual files for these potentially dangerous file types.
 }
 \examples{
